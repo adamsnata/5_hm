@@ -1,15 +1,13 @@
 import os
 
-import dotenv
 import pytest
-from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.remote import webdriver
 from selene import Browser, Config
-from selenium.webdriver import Remote
+from dotenv import load_dotenv
 
 from utils import attach
+
 
 DEFAULT_BROWSER_VERSION = "100.0"
 
@@ -31,7 +29,7 @@ def setup_browser(request):
     browser_version = request.config.getoption('--browser_version')
     browser_version = browser_version if browser_version != "" else DEFAULT_BROWSER_VERSION
     options = Options()
-    capabilities = {
+    selenoid_capabilities = {
         "browserName": "chrome",
         "browserVersion": browser_version,
         "selenoid:options": {
@@ -39,17 +37,15 @@ def setup_browser(request):
             "enableVideo": True
         }
     }
-    options.capabilities.update(capabilities)
+    options.capabilities.update(selenoid_capabilities)
 
-    # login = os.getenv('LOGIN')
-    # password = os.getenv('PASSWORD!')
-    login = 'user1'
-    password = '1234'
+    login = os.getenv('LOGIN')
+    password = os.getenv('PASSWORD')
 
-    driver = Remote(
+    driver = webdriver.Remote(
         command_executor=f"https://{login}:{password}@selenoid.autotests.cloud/wd/hub",
-        options=options)
-
+        options=options
+    )
     browser = Browser(Config(driver))
 
     yield browser
@@ -59,4 +55,3 @@ def setup_browser(request):
     attach.add_logs(browser)
     attach.add_video(browser)
     browser.quit()
-
