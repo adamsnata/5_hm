@@ -2,6 +2,7 @@ import os
 
 import dotenv
 import pytest
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote import webdriver
@@ -22,7 +23,7 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope='session', autouse=True)
 def load_env():
-    dotenv.load_dotenv('.env')
+    load_dotenv()
 
 
 @pytest.fixture(scope='function')
