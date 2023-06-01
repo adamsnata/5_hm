@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selene import Browser, Config, browser
 from dotenv import load_dotenv
+from selenium.webdriver import Remote
 
 from utils import attach
 
